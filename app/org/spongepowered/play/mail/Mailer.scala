@@ -27,8 +27,11 @@ trait Mailer extends Runnable {
   /** The sender password */
   val password: String
 
+  /** SMTP server URL */
   val smtpHost: String
+  /** SMTP port number */
   val smtpPort: Int = 465
+  /** SMTP transport protocol */
   val transportProtocol: String = "smtps"
 
   /** The rate at which to send emails */
@@ -37,6 +40,7 @@ trait Mailer extends Runnable {
 
   /** The properties to be applied to the [[Session]] */
   val properties: Map[String, Any] = Map.empty
+  /** Pending emails */
   var queue: Seq[Email] = Seq.empty
 
   var suppressLogger = false

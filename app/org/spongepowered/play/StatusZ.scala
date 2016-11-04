@@ -2,12 +2,13 @@ package org.spongepowered.play
 
 import javax.inject.Inject
 
+import play.api.Configuration
 import play.api.libs.json.{JsObject, Json}
 
 /**
   * Contains status information about the application.
   */
-final class StatusZ @Inject()() {
+final class StatusZ @Inject()(config: Configuration) {
 
   val BuildNum = "BUILD_NUMBER"
   val GitBranch = "GIT_BRANCH"
@@ -29,7 +30,7 @@ final class StatusZ @Inject()() {
     JobName -> env(JobName),
     BuildTag -> env(BuildTag),
     SpongeEnv -> env(SpongeEnv),
-    Service -> "SpongeAuth"
+    Service -> this.config.getString("sponge.service").getOrElse[String]("unknown")
   )
 
   private def env(key: String) = sys.env.getOrElse(key, "unknown")

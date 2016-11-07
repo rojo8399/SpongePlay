@@ -1,4 +1,4 @@
-package org.spongepowered.play
+package org.spongepowered.play.util
 
 import java.security.SecureRandom
 import java.util.Base64

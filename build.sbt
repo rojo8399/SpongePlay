@@ -8,7 +8,7 @@ lazy val `spongeplay` = (project in file(".")).enablePlugins(PlayScala)
 
 scalaVersion := "2.11.7"
 
-libraryDependencies ++= Seq(specs2 % Test)
+libraryDependencies ++= Seq(ws, specs2 % Test)
 
 unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )  
 

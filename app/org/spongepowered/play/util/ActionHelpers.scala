@@ -1,9 +1,9 @@
-package org.spongepowered.play
+package org.spongepowered.play.util
 
 import com.google.common.base.Preconditions._
 import play.api.data.Form
-import play.api.mvc.{Call, Result}
 import play.api.mvc.Results._
+import play.api.mvc.{Call, Result}
 
 /**
   * A helper class for some common functions of controllers.

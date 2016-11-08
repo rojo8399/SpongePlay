@@ -103,7 +103,7 @@ trait Mailer extends Runnable {
 }
 
 @Singleton
-final class MailerImpl @Inject()(config: Configuration, actorSystem: ActorSystem) extends Mailer {
+final class SpongeMailer @Inject()(config: Configuration, actorSystem: ActorSystem) extends Mailer {
 
   private val conf = config.getConfig("mail").get
 

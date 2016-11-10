@@ -67,12 +67,31 @@ trait SingleSignOnConsumer {
   def getVerifyUrl(returnUrl: String): String = getUrl(returnUrl, this.verifyUrl)
 
   private def getUrl(returnUrl: String, baseUrl: String) = {
-    val payload = "return_sso_url=" + returnUrl + "&nonce=" + nonce
-    val encoded = new String(Base64.getEncoder.encode(payload.getBytes(this.CharEncoding)))
-    val urlEncoded = URLEncoder.encode(encoded, this.CharEncoding)
-    val hmac = hmac_sha256(encoded.getBytes(this.CharEncoding))
-    baseUrl + "?sso=" + urlEncoded + "&sig=" + hmac
+    val payload = generatePayload(returnUrl, baseUrl)
+    val sig = generateSignature(payload)
+    val urlEncoded = URLEncoder.encode(payload, this.CharEncoding)
+    baseUrl + "?sso=" + urlEncoded + "&sig=" + sig
   }
+
+  /**
+    * Generates a new Base64 encoded SSO payload.
+    *
+    * @param returnUrl  URL to return to once authenticated
+    * @param baseUrl    Base URL
+    * @return           New payload
+    */
+  def generatePayload(returnUrl: String, baseUrl: String) = {
+    val payload = "return_sso_url=" + returnUrl + "&nonce=" + nonce
+    new String(Base64.getEncoder.encode(payload.getBytes(this.CharEncoding)))
+  }
+
+  /**
+    * Generates a signature for the specified Base64 encoded payload.
+    *
+    * @param payload  Payload to sign
+    * @return         Signature of payload
+    */
+  def generateSignature(payload: String) = hmac_sha256(payload.getBytes(this.CharEncoding))
 
   /**
     * Validates an incoming payload and extracts user information. The
@@ -110,7 +129,7 @@ trait SingleSignOnConsumer {
     if (externalId == -1 || username == null || email == null)
       return None
 
-    Some(SpongeUser(externalId, username, email))
+    Some(SpongeUser(externalId, username, email, None))
   }
 
   protected def nonce: String = new BigInteger(130, Random).toString(32)

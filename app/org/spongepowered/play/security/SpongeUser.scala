@@ -7,4 +7,4 @@ package org.spongepowered.play.security
   * @param username Username
   * @param email    Email
   */
-case class SpongeUser(id: Int, username: String, email: String)
+case class SpongeUser(id: Int, username: String, email: String, avatarUrl: Option[String])

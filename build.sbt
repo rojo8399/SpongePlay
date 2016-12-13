@@ -28,3 +28,6 @@ credentials += Credentials(
 )
 
 publishTo := Some(sys.props.getOrElse("repo.name", "Sponge Repo") at sys.props("repo.url"))
+
+// Replace default publish task with the one from sbt-aether-deploy
+overridePublishSettings

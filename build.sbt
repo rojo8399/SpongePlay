@@ -20,7 +20,7 @@ libraryDependencies ++= Seq(
 
 val repoHost = settingKey[String]("repo.host")
 
-repoHost := sys.props.getOrElse("repo.host", "https://repo.spongepowered.org/maven")
+repoHost := sys.props("repo.host")
 
 val repoName = settingKey[String]("repo.name")
 
@@ -34,11 +34,13 @@ val repoPassword = settingKey[String]("repo.pwd")
 
 repoPassword := sys.props("repo.pwd")
 
+crossPaths := false
+
 publishTo <<= (version, repoHost, repoName, repoUsername, repoPassword) { (v: String,
                                                                            host: String,
                                                                            name: String,
                                                                            user: String,
                                                                            pwd: String) =>
-  credentials += Credentials(name, host, user, pwd)
+  credentials += Credentials(name, host.replace("https://", "").replace("http://", "").replace("/", ""), user, pwd)
   Some(name at host)
 }

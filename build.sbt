@@ -38,7 +38,6 @@ crossPaths := false
 
 publishTo <<= (repoUrl, repoName, repoUsername, repoPassword) { (url: String, name: String,
                                                                  user: String, pwd: String) =>
-  println(new URL(url).getHost)
   credentials += Credentials(name, new URL(url).getHost, user, pwd)
   Some(name at url)
 }

@@ -18,9 +18,9 @@ libraryDependencies ++= Seq(
   "javax.mail" % "mail" % "1.4.7"
 )
 
-val repoHost = settingKey[String]("repo.host")
+val repoUrl = settingKey[String]("repo.url")
 
-repoHost := sys.props("repo.host")
+repoUrl := sys.props("repo.url")
 
 val repoName = settingKey[String]("repo.name")
 
@@ -36,11 +36,9 @@ repoPassword := sys.props("repo.pwd")
 
 crossPaths := false
 
-publishTo <<= (version, repoHost, repoName, repoUsername, repoPassword) { (v: String,
-                                                                           host: String,
-                                                                           name: String,
-                                                                           user: String,
-                                                                           pwd: String) =>
-  credentials += Credentials(name, host.replace("https://", "").replace("http://", "").replace("/", ""), user, pwd)
-  Some(name at host)
+publishTo <<= (repoUrl, repoName, repoUsername, repoPassword) { (url: String, name: String,
+                                                                 user: String, pwd: String) =>
+  println(new URL(url).getHost)
+  credentials += Credentials(name, new URL(url).getHost, user, pwd)
+  Some(name at url)
 }

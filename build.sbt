@@ -18,30 +18,13 @@ libraryDependencies ++= Seq(
   "javax.mail" % "mail" % "1.4.7"
 )
 
-val repoUrl = settingKey[String]("repo.url")
-
-repoUrl := sys.props("repo.url")
-
-val repoName = settingKey[String]("repo.name")
-
-repoName := sys.props.getOrElse("repo.name", "Sponge Repo")
-
-val repoUsername = settingKey[String]("repo.user")
-
-repoUsername := sys.props("repo.user")
-
-val repoPassword = settingKey[String]("repo.pwd")
-
-repoPassword := sys.props("repo.pwd")
-
 crossPaths := false
 
-publishTo <<= (repoUrl, repoName, repoUsername, repoPassword) { (url: String, name: String,
-                                                                 user: String, pwd: String) =>
-  println("URL      : " + url)
-  println("Name     : " + name)
-  println("User     : " + user)
-  println("Password : " + pwd.replaceAll(".", "*"))
-  credentials += Credentials(name, new URL(url).getHost, user, pwd)
-  Some(name at url)
-}
+credentials += Credentials(
+  sys.props.getOrElse("repo.name", "Sponge Repo"),
+  new URL(sys.props("repo.url")).getHost,
+  sys.props("repo.user"),
+  sys.props("repo.pwd")
+)
+
+publishTo := Some(sys.props.getOrElse("repo.name", "Sponge Repo") at sys.props("repo.url"))

@@ -18,27 +18,16 @@ libraryDependencies ++= Seq(
   "javax.mail" % "mail" % "1.4.7"
 )
 
-val repoHost = settingKey[String]("repo.host")
+crossPaths := false
 
-repoHost := sys.props.getOrElse("repo.host", "https://repo.spongepowered.org/maven")
+credentials += Credentials(
+  sys.props.getOrElse("repo.name", "Sponge Repo"),
+  new URL(sys.props("repo.url")).getHost,
+  sys.props("repo.user"),
+  sys.props("repo.pwd")
+)
 
-val repoName = settingKey[String]("repo.name")
+publishTo := Some(sys.props.getOrElse("repo.name", "Sponge Repo") at sys.props("repo.url"))
 
-repoName := sys.props.getOrElse("repo.name", "Sponge Repo")
-
-val repoUsername = settingKey[String]("repo.user")
-
-repoUsername := sys.props("repo.user")
-
-val repoPassword = settingKey[String]("repo.pwd")
-
-repoPassword := sys.props("repo.pwd")
-
-publishTo <<= (version, repoHost, repoName, repoUsername, repoPassword) { (v: String,
-                                                                           host: String,
-                                                                           name: String,
-                                                                           user: String,
-                                                                           pwd: String) =>
-  credentials += Credentials(name, host, user, pwd)
-  Some(name at host)
-}
+// Replace default publish task with the one from sbt-aether-deploy
+overridePublishSettings
